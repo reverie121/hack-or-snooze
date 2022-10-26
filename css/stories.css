@@ -1,0 +1,38 @@
+/* Lists of stories */
+
+.stories-list {
+    margin: 5px;
+}
+
+#stories-loading-msg {
+    font-weight: bold;
+    font-size: 150%;
+    margin: 20px 30px;
+}
+
+
+/* Individual stories */
+
+.story {
+    padding: 0.5rem 1rem;
+    font-size: .95rem;
+}
+
+.story-link {
+    color: #202030;
+    font-size: 0.85rem;
+    font-weight: normal;
+    margin: 18px 0;
+}
+
+.story-link:hover {
+    text-decoration: none;
+}
+
+.story-author {
+    margin-left: 2em;
+}
+
+.story-user {
+    display: block;
+}
