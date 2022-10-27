@@ -18,8 +18,7 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 function generateStoryMarkup(story) {
-    // console.debug("generateStoryMarkup", story);
-
+    console.debug("generateStoryMarkup");
     const hostName = story.getHostName();
     let isFavorite = 'fa-regular';
     try {
@@ -44,17 +43,16 @@ function generateStoryMarkup(story) {
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
-function putStoriesOnPage(uiList, storyList) {
+function putStoriesOnPage(pageList, storyList) {
     console.debug("putStoriesOnPage");
-    uiList.empty();
+    pageList.empty();
     // loop through all of our stories and generate HTML for them
     for (let story of storyList.stories) {
         const $story = generateStoryMarkup(story);
-        uiList.append($story);
+        pageList.append($story);
     }
     // change background color of every second story
     $(".story:odd").each(function() {
-        console.log(this);
         this.style.backgroundColor = '#F2D2BD';
     });
 }
@@ -71,25 +69,23 @@ async function handleFavClick(target) {
 }
 
 /** Activates click handler for adding/removing favorite stories when clicking on a heart */
-$('.stories-list').on("click", '.fa-heart', function(evt) {
-    handleFavClick(evt.target);
-});
+$('.stories-list').on("click", '.fa-heart', (evt) => handleFavClick(evt.target));
 
 /** Adds a new story to the storylist when add-story-form button is clicked. */
 async function addStoryToPage(evt) {
     evt.preventDefault();
+    // Check that the user has a token and has filled out all form fields before allowing a submit.
     if (currentUser.loginToken && $('#add-story-author').val() && $('#add-story-title').val() && $('#add-story-url').val()) {
         const newStory = {};
         newStory.title = $('#add-story-title').val();
         newStory.author = $('#add-story-author').val();
         newStory.url = $('#add-story-url').val();
         const submittedStory = await storyList.addStory(currentUser, newStory);
+        console.debug(submittedStory);
         hidePageComponents();
         storyList = await StoryList.getStories();
         putStoriesOnPage($allStoriesList, storyList);
         $allStoriesList.show();
-        // const markedUpStory = generateStoryMarkup(submittedStory);
-        // $allStoriesList.prepend(markedUpStory).show();
         $addStoryForm.trigger("reset");
     } else {
         return
@@ -100,12 +96,10 @@ $addStoryForm.on("submit", addStoryToPage);
 
 /** Deletes a user's story */
 async function handleTrashClick(target) {
-    const storyId = target.parentElement.parentElement.id
+    const storyId = target.parentElement.parentElement.id // This div id set to storyId in generateStoryMarkup
     await Story.deleteStory(storyId);
     showMyStories();
 }
 
 /** Click Handler for using trash icon to delete a story */
-$('.stories-list').on("click", '.trash-icon', function(evt) {
-    handleTrashClick(evt.target);
-});
+$myStoriesList.on("click", '.trash-icon', (evt) => handleTrashClick(evt.target));

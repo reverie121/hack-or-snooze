@@ -44,7 +44,6 @@ async function showMyStories(evt) {
     console.debug("showMyStories", evt);
     hidePageComponents();
     await currentUser.updateMyStoriesList();
-    console.log('showing trash');
     $('.trash-icon').show();
     $myStoriesList.show();
 }

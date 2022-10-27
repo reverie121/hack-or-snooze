@@ -91,11 +91,13 @@ class StoryList {
      * - obj of {title, author, url}
      * Returns the new Story instance
      */
-    async addStory(user, newStory) {
+    async addStory(user, { title, author, url }) {
+        const username = user.username;
+        const token = user.loginToken;
         const response = await axios({
             url: `${BASE_URL}/stories`,
             method: "POST",
-            data: { token: user.loginToken, story: { title: newStory.title, author: newStory.author, url: newStory.url, username: user.username } },
+            data: { token: token, story: { title, author, url, username } },
         });
         let { story } = response.data
         return new Story({
@@ -286,7 +288,6 @@ class User {
             myStories.push(story);
         }
         const myStoriesList = new StoryList(myStories);
-        console.debug(myStories);
         putStoriesOnPage($myStoriesList, myStoriesList);
     }
 }
